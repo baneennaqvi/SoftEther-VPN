@@ -81,7 +81,7 @@ int PQCModule_Encrypt(uint8_t *public_key, size_t public_key_len,
         return -1;
     }
 
-    // Copy KEM ciphertext to the beginning of the final ciphertext
+   
     memcpy(*ciphertext, ciphertext_kem, kem->length_ciphertext);
 
     // Encrypt the plaintext using XOR

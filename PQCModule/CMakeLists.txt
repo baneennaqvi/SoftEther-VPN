@@ -1,18 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Set the project name
 project(PQCModule)
 
-# Set the path to the OQS library include directory
-include_directories(
-    G:/FYP/SoftEtherVPN/liboqs/build/include/oqs  # This includes the 'oqs' directory
-)
+# Paths to liboqs include directory
+set(INCLUDE_DIR G:/FYP/SoftEtherVPN/liboqs/build/include)
 
-# Set the sources
-set(SOURCES
-    PQCModule.c
-    main.c  # Ensure main.c exists in the same directory as CMakeLists.txt
-)
+# Specify the library based on the build type
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(LIB_DIR G:/FYP/SoftEtherVPN/liboqs/build/lib/Debug)
+    set(OQS_LIB ${LIB_DIR}/oqs.lib)
+else()
+    set(LIB_DIR G:/FYP/SoftEtherVPN/liboqs/build/lib/Release)
+    set(OQS_LIB ${LIB_DIR}/oqs.lib)
+endif()
 
-# Create the executable
-add_executable(PQCModule ${SOURCES})
+# Source files
+set(SOURCE_FILES main.c PQCModule.c)
+
+# Executable target
+add_executable(PQCModule ${SOURCE_FILES})
+
+# Include directory for OQS headers
+target_include_directories(PQCModule PRIVATE ${INCLUDE_DIR})
+
+# Link the liboqs library
+target_link_libraries(PQCModule PRIVATE ${OQS_LIB})

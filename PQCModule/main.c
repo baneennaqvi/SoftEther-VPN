@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +5,13 @@
 
 #define PLAINTEXT "Hello, this is a test message!"
 #define PLAINTEXT_LEN strlen(PLAINTEXT)
+
+void print_hex(const uint8_t *data, size_t len) {
+    for (size_t i = 0; i < len; ++i) {
+        printf("%02x", data[i]);
+    }
+    printf("\n");
+}
 
 int main() {
     // Initialize the PQC module
@@ -20,11 +26,16 @@ int main() {
     uint8_t *secret_key = NULL;
     size_t secret_key_len = 0;
 
-    if (PQCModule_GenerateKeyPair(&public_key, &public_key_len, &secret_key, &secret_key_len) != 0) {
+    if (PQCModule_GenerateKeyPair(&public_key, &public_key_len, &secret_key, &secret_key_len) != 0 || 
+        public_key == NULL || secret_key == NULL) {
         fprintf(stderr, "Failed to generate key pair.\n");
         PQCModule_Cleanup();
         return EXIT_FAILURE;
     }
+
+    // Print public key in hex format
+    printf("Public key: ");
+    print_hex(public_key, public_key_len);
 
     // Encrypt the plaintext
     uint8_t *ciphertext = NULL;
@@ -39,6 +50,8 @@ int main() {
     }
 
     printf("Encrypted message length: %zu bytes\n", ciphertext_len);
+    printf("Ciphertext: ");
+    print_hex(ciphertext, ciphertext_len);
 
     // Decrypt the ciphertext
     uint8_t *decrypted_plaintext = NULL;
